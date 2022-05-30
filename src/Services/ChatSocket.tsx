@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 import * as firebase from 'firebase/app'
-import { getFirestore, collection, addDoc, query, where, onSnapshot, Timestamp } from 'firebase/firestore'
+import { getFirestore, collection, addDoc, query, where, onSnapshot, orderBy } from 'firebase/firestore'
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -43,7 +43,7 @@ function sendMessage(message: string, name: string, room: string): void {
 
 
 function recieveMessage(callback: CallableFunction): void {
-    const q = query(chatRef, where("room", "==", chatRoom));
+    const q = query(chatRef, where("room", "==", chatRoom), orderBy("date"));
     onSnapshot(q, (querySnapshot) => {
         const messages: any[] = [];
         querySnapshot.forEach((doc) => {

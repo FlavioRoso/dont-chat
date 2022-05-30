@@ -50,13 +50,12 @@ function Chat(props: any) {
     }
 
 
-  }, [chatConfig]);
+  }, [chatConfig, setFormName]);
 
 
 
   function addNameContext() {
 
-    console.log(nameInput);
     setFormName(false);
     chatConfig.name = nameInput;
     chatConfig.room = props.match.params.room;
@@ -73,8 +72,10 @@ function Chat(props: any) {
 
   }
   function handlerNewMesage(message: any) {
-    ChatSocket.sendMessage(message, chatConfig.name, chatConfig.room);
-    console.log(`sending to ${props.match.params.room} : `, message);
+    if (message.trim() != "") {
+      ChatSocket.sendMessage(message, chatConfig.name, chatConfig.room);
+    }
+
   }
 
 

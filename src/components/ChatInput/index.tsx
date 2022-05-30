@@ -12,9 +12,7 @@ function ChatInput({ onSendMessage }: any) {
   function submitMessage(e: any) {
 
     e.preventDefault();
-    console.log(message);
     onSendMessage(message)
-
     setMessage("");
 
   }

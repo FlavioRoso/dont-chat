@@ -25,6 +25,7 @@ export const Container = styled.div`
 
 export const Messages = styled.div`
   padding: 30px;
+  padding-bottom: 100px;
   overflow-y: scroll;
   max-width: 1000px;
   height: 700px; 
