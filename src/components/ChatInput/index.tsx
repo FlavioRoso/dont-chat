@@ -1,15 +1,15 @@
-import React, {useState,useEffect, EventHandler} from 'react';
+import React, { useState, useEffect, EventHandler } from 'react';
 
 import { Container, Input, Button } from './styles';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 
-function ChatInput( {onSendMessage} :any) {
+function ChatInput({ onSendMessage }: any) {
 
-  const [message,setMessage] = useState("");
+  const [message, setMessage] = useState("");
 
 
-  function submitMessage(e){
+  function submitMessage(e: any) {
 
     e.preventDefault();
     console.log(message);
@@ -19,11 +19,11 @@ function ChatInput( {onSendMessage} :any) {
 
   }
 
-  
-  return(
-    <Container onSubmit={(e)=> submitMessage(e)}>
-        <Input  onChange={(e: any) => setMessage(e.target.value)} value={message} />
-        <Button type="submit" > <FontAwesomeIcon icon={faPaperPlane} /> </Button>
+
+  return (
+    <Container onSubmit={(e: any) => submitMessage(e)}>
+      <Input onChange={(e: any) => setMessage(e.target.value)} value={message} />
+      <Button type="submit" > <FontAwesomeIcon icon={faPaperPlane} /> </Button>
     </Container>
   );
 }

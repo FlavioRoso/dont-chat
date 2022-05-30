@@ -1,13 +1,13 @@
-import React, {useState,useContext,useEffect} from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons'
 
-import { 
-  Container, 
-  Messages, 
-  Message, 
-  MessageText, 
+import {
+  Container,
+  Messages,
+  Message,
+  MessageText,
   Name,
   FormName,
   Center
@@ -15,67 +15,55 @@ import {
 } from './styles';
 
 import ChatInput from '~/components/ChatInput';
-import {ChatContext}  from '~/Context/ChatContext';
-import ChatSocket  from '~/Services/ChatSocket';
+import { ChatContext } from '~/Context/ChatContext';
+import ChatSocket from '~/Services/ChatSocket';
 
 
-interface MessageType{
-  name : string;
-  date: string;
-  message : string;
-}
+// interface MessageType {
+//   name: string;
+//   date: string;
+//   message: string;
+// }
 
 
-function Chat({match}) {
+function Chat(props: any) {
 
-  const [chatConfig,setChatConfig] = useContext(ChatContext);
+  const [chatConfig, setChatConfig] = useContext(ChatContext);
 
   const [nameInput, setNameInput] = useState("");
-  const [formName,setFormName] = useState(false);
-  const [messages,setMessages] = useState([] as Array<MessageType>);
+  const [formName, setFormName] = useState(false);
+  const [messages, setMessages] = useState([]);
 
-   useEffect(()=>{
-    
-    /*
-    
-    ChatSocket.joinChatRoom(match.params.room);
-    ChatSocket.recieveMessage((data: any) => {
+  useEffect(() => {
 
-      console.log(data);
-      
-    })
-    */
-   if(!chatConfig.name)
-   {
+
+    if (!chatConfig.name) {
       setFormName(true);
-   }
-   else
-   {
-     ChatSocket.joinChatRoom(match.params.room);
-     ChatSocket.recieveMessage((data: any) => {
+    }
+    else {
+      ChatSocket.joinChatRoom(props.match.params.room);
+      ChatSocket.recieveMessage((data: never) => {
+
+        setMessages([...data]);
+
+      })
+    }
 
 
-        messages.push(data);
-        setMessages([...messages]);
-       
-     })
-   }
-    
-    
-  },[chatConfig]);
+  }, [chatConfig]);
 
 
- 
-  function addNameContext(){
+
+  function addNameContext() {
 
     console.log(nameInput);
     setFormName(false);
     chatConfig.name = nameInput;
-    chatConfig.room = match.params.room;
-    setChatConfig({...chatConfig})
+    chatConfig.room = props.match.params.room;
+    setChatConfig({ ...chatConfig })
 
   }
-  function formatTime(time){
+  function formatTime(time: any) {
 
     let data = new Date(time);
     let horas = data.getHours();
@@ -84,46 +72,45 @@ function Chat({match}) {
     return horas + ":" + ('0' + minutos).slice(-2);
 
   }
-  function handlerNewMesage(message: string)
-  {
-    ChatSocket.sendMessage(message,chatConfig.name,chatConfig.room);
-      console.log(`sending to ${match.params.room} : `,message);
+  function handlerNewMesage(message: any) {
+    ChatSocket.sendMessage(message, chatConfig.name, chatConfig.room);
+    console.log(`sending to ${props.match.params.room} : `, message);
   }
 
 
-  return(
-      <>
-      <FormName active={formName} onSubmit ={(e)=> {
-              e.preventDefault();
-              addNameContext();
-            }}>
-              <Center>
-                  <p>Digite um nome para se <br /> conectar ao chat</p>
-                  <div className="form-input">
-                    <input type="text" onChange={(e) => setNameInput(e.target.value)} autoFocus={true} />
-                    <button type="submit"><FontAwesomeIcon icon={faCaretRight} /> </button>
-                  </div>
-                </Center>
-            </FormName> 
-     
+  return (
+    <>
+      <FormName active={formName} onSubmit={(e: any) => {
+        e.preventDefault();
+        addNameContext();
+      }}>
+        <Center>
+          <p>Digite um nome para se <br /> conectar ao chat</p>
+          <div className="form-input">
+            <input type="text" onChange={(e) => setNameInput(e.target.value)} autoFocus={true} />
+            <button type="submit"><FontAwesomeIcon icon={faCaretRight} /> </button>
+          </div>
+        </Center>
+      </FormName>
+
       <Container>
-        
+
         <Messages >
           {
-            messages.map((row,key) =>
-            
-                <Message key={key} className={row.name == chatConfig.name ? "sender" : "false"} date={() => formatTime(row.date)}>
-                    <Name >{row.name}</Name>
-                    <MessageText>{row.message}</MessageText>
-                </Message>
-            
+            messages.map((row, key) =>
+
+              <Message key={key} className={row.name == chatConfig.name ? "sender" : "false"} date={() => formatTime(row.date)}>
+                <Name >{row.name}</Name>
+                <MessageText>{row.message}</MessageText>
+              </Message>
+
             )
           }
-          <ChatInput onSendMessage={(message) => handlerNewMesage(message)} />
+          <ChatInput onSendMessage={(message: any) => handlerNewMesage(message)} />
         </Messages>
-         
+
       </Container>
-      </>
+    </>
   );
 }
 
